@@ -1,0 +1,12 @@
+# Ignore the secret keys
+.streamlit/
+
+# Ignore the virtual environment (it's too heavy to upload)
+venv/
+ENV/
+env/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
