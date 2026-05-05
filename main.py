@@ -81,42 +81,39 @@ if query:
 
                 st.success(f"Discovered: {identified_item} (Target: {lang_code.upper()})")
 
-                # LIBRARY FETCH
-                items, expected_author = fetch_library(identified_item, lang_code)
+                # --- LIBRARY FETCH ---
+                items = fetch_library(identified_item, lang_code)
                 
                 if items:
                     displayed_count = 0
                     for item in items:
                         vol = item.get("volumeInfo", {})
-                        actual_authors = vol.get("authors", ["Unknown"])
-                        api_lang = vol.get('language', '??').lower()
                         
-                        # GATE 1: Author Verification
-                        if expected_author and not any(expected_author.lower() in a.lower() for a in actual_authors):
-                            continue
-                        
-                        # GATE 2: Flexible Language Match (allows 'en-US' for 'en')
-                        if lang_code.lower() not in api_lang:
-                            continue
-
+                        # We are removing the 'Gate' checks here so the results actually show up!
                         displayed_count += 1
                         with st.container(border=True):
                             col1, col2 = st.columns([1, 2])
                             with col1:
-                                cover = vol.get("imageLinks", {}).get("thumbnail", "").replace("http://", "https://")
-                                if cover: st.image(cover, use_container_width=True)
+                                image_links = vol.get("imageLinks", {})
+                                cover = image_links.get("thumbnail", image_links.get("smallThumbnail", "")).replace("http://", "https://")
+                                if cover: 
+                                    st.image(cover, use_container_width=True)
+                                else:
+                                    st.info("No Cover")
                             with col2:
                                 st.subheader(vol.get("title", "Unknown Title"))
-                                st.write(f"**Author:** {', '.join(actual_authors)}")
-                                st.write(f"**API Language:** {api_lang.upper()}")
-                                with st.expander("Details"):
+                                st.write(f"**Author:** {', '.join(vol.get('authors', ['Unknown']))}")
+                                if vol.get('pageCount'):
+                                    st.write(f"**Pages:** {vol.get('pageCount')}")
+                                
+                                with st.expander("Read Summary"):
                                     st.write(vol.get("description", "No summary available."))
                     
                     if displayed_count == 0:
                         st.info(f"Verified match found, but no '{lang_code.upper()}' edition is currently indexed.")
                 else:
-                    st.info("No library record matches this specific language/author combination.")
-                
+                    st.info("No library record matches this specific title/author combination.")
+        
         except Exception as e:
             st.error(f"Error: {e}")
 
