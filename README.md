@@ -35,7 +35,7 @@ ShelfSense Ultra is a precision book discovery engine designed to bridge the gap
 
 4. **Run the App:**
     ```bash
-    streamlit run app.py
+    streamlit run main.py
 
 ## 🛡️ Security
 This project implements strict security protocols. API keys are managed via Streamlit Secrets and are never committed to version control, protected by a root-level `.gitignore`.
