@@ -1,7 +1,7 @@
 # Ignore the secret keys
 .streamlit/
 
-# Ignore the virtual environment (it's too heavy to upload)
+# Ignore the virtual environment
 venv/
 ENV/
 env/
